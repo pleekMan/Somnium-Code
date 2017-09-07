@@ -16,8 +16,8 @@ class Crater {
   Crater() {
 
     center = new PVector(0, height * 0.5, 0);
-    craterVertices = new PVector[20];
-    
+    craterVertices = new PVector[50];
+
     for (int i=0; i<craterVertices.length; i++) {
       craterVertices[i] = new PVector( i / float(craterVertices.length), 0, 0);
     }
@@ -87,9 +87,9 @@ class Crater {
 
   void render() {
 
-    stroke(255, 127, 0);
+    stroke(127, 127, 255);
     //noStroke();
-    fill(255, 255, 0);
+    //fill(255, 255, 0);
 
     float angleUnit = TWO_PI / revolveResolution;
 
@@ -100,49 +100,22 @@ class Crater {
 
       pushMatrix(); 
       rotateY(angleUnit * r);
-      
-      beginShape(POINTS);
-      
+
+      //beginShape(POINTS);
+
       for (int i=0; i < craterVertices.length; i++) {
 
         float x = craterVertices[i].x * widthMultiplier;
         float y =  craterVertices[i].y * -heightMultiplier;
 
-        float x1 = craterVertices[(i + 1) % craterVertices.length].x * widthMultiplier;
-        float y1 =  craterVertices[(i + 1) % craterVertices.length].y * -heightMultiplier;
-
-        pushMatrix();
-        rotate(angleUnit);
-        float x2 = craterVertices[(i + 1) % craterVertices.length].x * widthMultiplier;
-        float y2 =  craterVertices[(i + 1) % craterVertices.length].y * -heightMultiplier;
-
-        float x3 = craterVertices[i].x * widthMultiplier;
-        float y3 =  craterVertices[i].y * -heightMultiplier;
-
-        //beginShape(QUAD_STRIP);
-
-        fill(255, 255, 0);
-        vertex(x, y, 0);
-        //vertex(x1, y1, 0);
-        //vertex(x2, y2, 0);
-        //vertex(x3, y3, 0);
-
-        //endShape(CLOSE);
-
-        //println("|| " + r + " :: " + i + " = " + x + ":"+y+" "+ x1 + ":"+y1+" "+ x2 + ":"+y2+" "+ x3 + ":"+y3);
-
-        popMatrix();
-
-        //ellipse(x, y, 3, 3);
-        //stroke(255 * craterVertices[i].y, 255 - 255 * craterVertices[i].x, 0);
-        //stroke(255);
-
-
+        //fill(255, 255, 0);
+        point(x, y);
+        //line(x, y, x +1000, y);
 
         //println("|" + i + "| X: " + x + " | Y: " + y);
       }
 
-      endShape();
+      //endShape();
 
       popMatrix();
     }
@@ -176,8 +149,47 @@ class Crater {
     outerPlateauStart = constrain(percentStart, outerRampStart + 0.01, 1 - 0.01);
   }
 
-  void setSize(float w, float h) {
-    widthMultiplier = w;
+  void setHeight(float h) {
     heightMultiplier = h;
+  }
+  void setRadius(float r) {
+    widthMultiplier = r;
+  }
+
+  PShape getShape() {
+
+    PShape crater = createShape();
+
+    crater.beginShape(LINES);
+    noFill();
+    stroke(127,127, 255);
+
+    float angleUnit = TWO_PI / revolveResolution;
+
+    for (int r=0; r < revolveResolution; r++) {
+
+      for (int i=0; i < craterVertices.length; i++) {
+
+        float x = craterVertices[i].x * (cos(angleUnit * r));
+        float z = craterVertices[i].x * (sin(angleUnit * r));
+        float y = craterVertices[i].y;
+
+        x = center.x + (x * widthMultiplier);
+        z = center.z + (z * widthMultiplier);
+        y = center.y + (y * -heightMultiplier);
+
+        //float x = craterVertices[i].x * widthMultiplier;
+        //float y =  craterVertices[i].y * -heightMultiplier;
+
+        crater.vertex(x, y, z);
+
+        //println("|" + i + "| X: " + x + " | Y: " + y);
+      }
+    }
+
+
+    crater.endShape();
+
+    return crater;
   }
 }
