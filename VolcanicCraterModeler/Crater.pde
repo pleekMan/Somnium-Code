@@ -21,7 +21,7 @@ class Crater {
     ringResolution = 40;
     craterHeight = 70;
 
-    noiseRange = 3;
+    noiseRange = 3; // EXTENT OF THE WIDTH OF THE NOISE (noiseBaseStart + )
     noiseBaseStart = random(10);
     noiseTopStart = random(10);
     noiseMultiplier = 200;
