@@ -5,6 +5,8 @@ PeasyCam cam;
 float seaSize = 1000;
 Creature bicho;
 
+FlowCloud seaFlow;
+
 ArrayList<Creature> bichos;
 
 void setup() {
@@ -27,6 +29,8 @@ void setup() {
     newBicho.setSize(random(10,20), random(21,100));
     bichos.add(newBicho);
   }
+  
+  seaFlow = new FlowCloud(new PVector(seaSize,seaSize,seaSize));
 }
 
 void draw() {
@@ -36,12 +40,11 @@ void draw() {
 
   bicho.render();
 
-  for (int i=0; i<bichos.size(); i++) {
-    
-    //float seaMotion = 
-    
+  for (int i=0; i<bichos.size(); i++) {    
     bichos.get(i).render();
   }
+  
+  seaFlow.render();
 
   cam.beginHUD();
   fill(255, 255, 0);
