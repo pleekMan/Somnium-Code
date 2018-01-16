@@ -11,7 +11,7 @@ ArrayList<Creature> bichos;
 
 void setup() {
   size(800, 800, P3D);
-
+  //frameRate(2);
   cam = new PeasyCam(this, 500);
   cam.setMinimumDistance(20);
   cam.setMaximumDistance(5000);
@@ -20,7 +20,7 @@ void setup() {
 
   bichos = new ArrayList<Creature>();
 
-  for (int i=0; i<50; i++) {
+  for (int i=0; i<5; i++) {
     PVector spawnPosition = new PVector(random(-seaSize, seaSize), random(-seaSize, seaSize), random(-seaSize, seaSize));
 
     Creature newBicho = new Creature();
@@ -35,7 +35,16 @@ void setup() {
 
 void draw() {
   background(0);
-
+  
+  /*
+  cam.beginHUD();
+  fill(255, 255, 0);
+  drawMouseCoordinates();  
+  fill(0,5);
+  rect(0,0,width, height);
+  cam.endHUD();
+  */
+  
   drawAxisGizmo(0, 0, 0, 100);
 
   bicho.render();
@@ -46,10 +55,7 @@ void draw() {
   
   seaFlow.render();
 
-  cam.beginHUD();
-  fill(255, 255, 0);
-  drawMouseCoordinates();
-  cam.endHUD();
+
 }
 
 
