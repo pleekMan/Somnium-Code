@@ -4,6 +4,10 @@ class Creature {
   PVector velocity;
   PVector rotation;
 
+  int skinType;
+  color color1;
+  color color2;
+
   PVector headPos;
 
   //PVector size;
@@ -28,15 +32,16 @@ class Creature {
     position = new PVector();
     headPos = new PVector();
 
+    skinType = 0;
+
     tall = random(100, 500);
 
     head = new Head();
     head.setFaceSize(radiusMax);
-    
   } 
 
   public void render() {
-
+    sphereDetail(5);
     //stroke(255,0,0);
     //strokeWeight(4);
     noStroke();
@@ -45,7 +50,7 @@ class Creature {
 
     // GLOBAL CREATURE TRANSLATION, LIKE SWIMMING IN WAVES
     float xSwim = map(sin(radiusOsc * 0.2), -1, 1, -50, 50);
-    float ySwim = map(cos(radiusOsc * 0.2), -1, 1, -50, 50) * 1.5;
+    float ySwim = map(cos(radiusOsc * 0.2), -1, 1, -50, 50) * 1.3;
     float zSwim = xSwim * ySwim * 0.2;
 
 
@@ -77,7 +82,7 @@ class Creature {
       float nowRadiusNext = map(ringOscillationNext, -1, 1, radiusMin, radiusMax * 1.2);
 
 
-      color c = lerpColor(color(200, 200, 0), color(0, 200, 200), z / (float)bodyResAlong);
+      color c = lerpColor(color1, color2, z / (float)bodyResAlong);
       //fill(c, ((ringOscillation + 1) * 0.5) * 255);
       //stroke(c, 255);
 
@@ -99,15 +104,12 @@ class Creature {
         float x3 = nowRadiusNext * (cos((TWO_PI / bodyResRadial) * j));
         float y3 = nowRadiusNext * (sin((TWO_PI / bodyResRadial) * j));
 
+
         noStroke();
         fill(c, ((ringOscillation + 1) * 0.5) * 255);
 
-        beginShape(QUADS);
-        vertex(x, y, zPos);
-        vertex(x1, y1, zPos);
-        vertex(x2, y2, zPosNext);
-        vertex(x3, y3, zPosNext);
-        endShape();
+        drawSkin(skinType, x, y, x1, y1, x2, y2, x3, y3, zPos, zPosNext);
+
 
         stroke((ringOscillation + 1)  * 255);
         drawSpikes(x, y, zPos, x1, y1, zPos, x2, y2, zPosNext);
@@ -121,6 +123,24 @@ class Creature {
     radiusOsc += radiusOscIncrement;
     waveOscX += waveIncrement;
     waveOscY += waveIncrement;
+  }
+
+  void drawSkin(int skinType, float x, float y, float x1, float y1, float x2, float y2, float x3, float y3, float zPos, float zPosNext) {
+
+    if (skinType == 0) {
+      beginShape(QUADS);
+      vertex(x, y, zPos);
+      vertex(x1, y1, zPos);
+      vertex(x2, y2, zPosNext);
+      vertex(x3, y3, zPosNext);
+      endShape();
+    } else if (skinType == 1) {
+      beginShape(TRIANGLE_FAN);
+      vertex(x, y, zPos);
+      vertex(x1, y1, zPos);
+      vertex(x2, y2, zPosNext);
+      endShape();
+    }
   }
 
   public void setPosition(PVector pos) {
@@ -150,5 +170,14 @@ class Creature {
     normalVector.mult(50);
 
     line(x1, y1, z1, normalVector.x + x1, normalVector.y + y1, normalVector.z + z1);
+  }
+
+  public void setSkinType(int type) {
+    skinType = type;
+  }
+  
+  public void setColors(color c1, color c2){
+    color1 = c1;
+    color2 = c2;
   }
 }
