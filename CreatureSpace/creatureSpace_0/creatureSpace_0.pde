@@ -40,7 +40,7 @@ void draw() {
   cam.beginHUD();
   fill(255, 255, 0);
   drawMouseCoordinates();  
-  fill(0,5);
+  fill(0,3);
   rect(0,0,width, height);
   cam.endHUD();
   */

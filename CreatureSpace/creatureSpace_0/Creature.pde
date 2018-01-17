@@ -3,7 +3,7 @@ class Creature {
   PVector position;
   PVector velocity;
   PVector rotation;
-  
+
   PVector headPos;
 
   //PVector size;
@@ -20,15 +20,19 @@ class Creature {
   float waveOscX = random(10);
   float waveOscY = random(10);
   float waveIncrement = random(0.3);
-  
+
   Head head;
 
   public Creature() {
 
     position = new PVector();
     headPos = new PVector();
-    
+
+    tall = random(100, 500);
+
     head = new Head();
+    head.setFaceSize(radiusMax);
+    
   } 
 
   public void render() {
@@ -38,7 +42,7 @@ class Creature {
     noStroke();
 
     pushMatrix();
-    
+
     // GLOBAL CREATURE TRANSLATION, LIKE SWIMMING IN WAVES
     float xSwim = map(sin(radiusOsc * 0.2), -1, 1, -50, 50);
     float ySwim = map(cos(radiusOsc * 0.2), -1, 1, -50, 50) * 1.5;
@@ -46,15 +50,15 @@ class Creature {
 
 
     translate(position.x + xSwim, position.y + ySwim, position.z + zSwim);
-    
+
     // HEAD
     head.setPosition(new PVector());
     head.render();
-    
+
     //noStroke();
     //fill(255);
     //sphere(30);
-    
+
     scale(1, 1, 1 + (abs(xSwim) * 0.05)); // ABS creates a pulling gesture in the creatures
 
     //translate(position.x, position.y, position.z);
@@ -131,6 +135,7 @@ class Creature {
   public void setSize(float minRadius, float maxRadius) {
     radiusMin = minRadius;
     radiusMax = maxRadius;
+    head.setFaceSize(radiusMax);
   }
 
   public void drawSpikes(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
