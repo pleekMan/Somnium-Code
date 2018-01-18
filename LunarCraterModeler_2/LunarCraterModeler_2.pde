@@ -50,8 +50,8 @@ void setup() {
   }
 
   enableCameraControl = true;
-  
-  vertShader = loadShader("frags.glsl","verts.glsl");
+
+  vertShader = loadShader("frags.glsl", "verts.glsl");
   shader(vertShader);
 }
 
@@ -69,9 +69,8 @@ void draw() {
    craters.get(i).render();
    }
    */
-   
 
-  shape(cratersFrozen);
+
 
   //drawGround();
 
@@ -80,11 +79,39 @@ void draw() {
   //line(0, -1, 0, 0, -1, -10000);
 
 
-  drawAxisGizmo(100);
 
   cam.update();
-  //cam.render();
+  cam.render();
+  float camFov = map(mouseX,0,width,0.1,TWO_PI);
+  float camZ = (height/2.0) / tan(camFov/2.0);
+  perspective(camFov,width/(float)height,camZ * 0.1,camZ * 10);
   camera(cam.camPosition.x, cam.camPosition.y, cam.camPosition.z, cam.target.x, cam.target.y, cam.target.z, 0, 1, 0);
+  
+
+
+  drawAxisGizmo(100);
+
+  shape(cratersFrozen);
+
+
+  // DO STUFF ON EACH CRATER
+  /*
+  stroke(255);
+  //fill(255, 255, 0);
+  for (int i=0; i<cratersFrozen.getChildCount (); i++) {
+    PVector shapePos = cratersFrozen.getChild(i).getVertex(0);
+    
+    
+    pushMatrix();
+    translate(shapePos.x, shapePos.y, shapePos.z);
+    //text(i,0,0);
+    box(50);
+    
+    //line(cam.target.x, cam.target.y, cam.target.z,shapePos.x, shapePos.y, shapePos.z);
+    popMatrix();
+  }
+  */
+
 
   showFPS();
 
@@ -117,7 +144,7 @@ void mouseDragged() {
   //craters.get(0).setCenter(craters.get(0).center.x, craters.get(0).center.y, (mouseY * 10) - 500);
 
   //camera.zoom(radians(mouseY - pmouseY) / 2.0);
-  
+
   cam.setAltitude( -(height - mouseY));
 }
 
@@ -137,8 +164,8 @@ void createNewCrater() {
 
 void drawGround() {
 
-  noStroke();
-  fill(50);
+  stroke(255);
+  fill(255,255,0);
   beginShape(QUAD);
   vertex(-1000, 0, 0);
   vertex(1000, 0, 0);

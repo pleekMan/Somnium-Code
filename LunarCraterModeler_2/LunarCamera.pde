@@ -42,7 +42,7 @@ class LunarCamera {
     //CAMERA
     pushMatrix();
     translate(camPosition.x, camPosition.y, camPosition.z);
-    sphere(20);
+    //sphere(20);
     popMatrix();
     
     line(camPosition.x, camPosition.y, camPosition.z,target.x, target.y, target.z);
