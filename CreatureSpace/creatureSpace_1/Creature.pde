@@ -17,13 +17,14 @@ class Creature {
   float radiusMax = 50;
   float radiusMin = 10;
   float tall = 300;
-  
+
   // INTERACTIVITY & TRIGGERS  
   float radiusMaxMultiplier = 1;
   float spikesLengthMultiplier = 1;
-  float spikesWidthMultiplier;
-  float opacityMultiplier;
-  
+  float spikesWidthMultiplier = 1;
+  float opacityMultiplier = 1;
+  float swimMultiplier = 1;
+
 
   float radiusOsc = random(100);
   float radiusOscIncrement = random(0.1);
@@ -48,25 +49,30 @@ class Creature {
   } 
 
   public void render() {
+    pushStyle();
     sphereDetail(5);
     //stroke(255,0,0);
     //strokeWeight(4);
     noStroke();
-    
-      // INTERACTIVITY & TRIGGERS  
-    radiusMaxMultiplier *= 0.98;
-    radiusMaxMultiplier = constrain(radiusMaxMultiplier,1,999);
-    
-    spikesWidthMultiplier *= 0.95;
-    spikesWidthMultiplier = constrain(spikesWidthMultiplier,1,100);
+
+    // INTERACTIVITY & TRIGGERS  
+    radiusMaxMultiplier *= 0.95;
+    radiusMaxMultiplier = constrain(radiusMaxMultiplier, 1, 999);
+
+    spikesWidthMultiplier *= 0.9;
+    spikesWidthMultiplier = constrain(spikesWidthMultiplier, 1, 100);
+
+    swimMultiplier *= 0.99;
+    swimMultiplier = constrain(swimMultiplier, 1, 20);
+
 
     pushMatrix();
 
     // GLOBAL CREATURE TRANSLATION, LIKE SWIMMING IN WAVES
-    float xSwim = map(sin(radiusOsc * 0.2), -1, 1, -50, 50);
-    float ySwim = map(cos(radiusOsc * 0.2), -1, 1, -50, 50) * 1.3;
-    float zSwim = xSwim * ySwim * 0.2;
-
+    float xSwim = map(sin((radiusOsc * swimMultiplier) * 0.2), -1, 1, -100, 100);
+    float ySwim = map(cos((radiusOsc * swimMultiplier) * 0.2), -1, 1, -100, 100) * 1.3;
+    //float zSwim = xSwim * ySwim * 0.2;
+    float zSwim = sin(waveOscX * 0.2) * 200;
 
     translate(position.x + xSwim, position.y + ySwim, position.z + zSwim);
 
@@ -137,6 +143,8 @@ class Creature {
     radiusOsc += radiusOscIncrement;
     waveOscX += waveIncrement;
     waveOscY += waveIncrement;
+    
+    popStyle();
   }
 
   void drawSkin(int skinType, float x, float y, float x1, float y1, float x2, float y2, float x3, float y3, float zPos, float zPosNext) {
@@ -182,7 +190,7 @@ class Creature {
 
     PVector normalVector = side1.cross(side2);
     normalVector.mult(50 * spikesLengthMultiplier);
-    
+
     strokeWeight(spikesWidthMultiplier);
     line(x1, y1, z1, normalVector.x + x1, normalVector.y + y1, normalVector.z + z1);
     strokeWeight(1);
@@ -191,8 +199,8 @@ class Creature {
   public void setSkinType(int type) {
     skinType = type;
   }
-  
-  public void setColors(color c1, color c2){
+
+  public void setColors(color c1, color c2) {
     color1 = c1;
     color2 = c2;
   }

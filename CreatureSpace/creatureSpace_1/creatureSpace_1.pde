@@ -3,6 +3,7 @@ import peasy.*;
 PeasyCam cam;
 
 float seaSize = 1000;
+float creatureCount = 50;
 Creature bicho;
 
 FlowCloud seaFlow;
@@ -13,21 +14,30 @@ color colorPairs[][];
 
 // INTERACTIVITY AND TRIGGERS
 boolean enableColorDimer = false;
+boolean enableSpikesLength = false;
 
 void setup() {
   size(800, 800, P3D);
-  //frameRate(2);
+  frameRate(30);
   cam = new PeasyCam(this, 500);
   cam.setMinimumDistance(20);
   cam.setMaximumDistance(5000);
 
   generateColorPairs();
 
+  // EL BICHO CENTRAL, EL PRIMERO
   bicho = new Creature();
+  bicho.setPosition(new PVector());
+  bicho.setOscillation(random(100), random(0.1));
+  bicho.setSize(random(10, 20), random(21, 100));
+  bicho.setSkinType(floor(random(2.99)));
+  int randomColorPair = floor(random(colorPairs.length));
+  bicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
+  println("-|| Color Pair: " + randomColorPair);
 
   bichos = new ArrayList<Creature>();
 
-  for (int i=0; i<5; i++) {
+  for (int i=0; i<creatureCount; i++) {
     PVector spawnPosition = new PVector(random(-seaSize, seaSize), random(-seaSize, seaSize), random(-seaSize, seaSize));
 
     Creature newBicho = new Creature();
@@ -35,12 +45,15 @@ void setup() {
     newBicho.setOscillation(random(100), random(0.1));
     newBicho.setSize(random(10, 20), random(21, 100));
     newBicho.setSkinType(floor(random(2.99)));
-    int randomColorPair = floor(random(colorPairs.length));
+    randomColorPair = floor(random(colorPairs.length));
     newBicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
+    println("-|| Color Pair: " + randomColorPair);
+
     bichos.add(newBicho);
   }
 
   seaFlow = new FlowCloud(new PVector(seaSize, seaSize, seaSize));
+  seaFlow.setColorPair(colorPairs[0][0], colorPairs[0][1]);
 }
 
 void draw() {
@@ -58,7 +71,12 @@ void draw() {
   // INTERACTIVITY AND TRIGGERS. Also at keyPressed
   if (enableColorDimer) {
     for (int i=0; i<bichos.size (); i++) {
-      bichos.get(i).opacityMultiplier = map(mouseY,height,0,0,1);
+      bichos.get(i).opacityMultiplier = map(mouseY, height, 0, 0, 1);
+    }
+  }
+  if (enableSpikesLength) {
+    for (int i=0; i<bichos.size (); i++) {
+      bichos.get(i).spikesLengthMultiplier = map(mouseY, height, 0, 0, 5);
     }
   }
 
@@ -141,9 +159,24 @@ void keyPressed() {
       bichos.get(i).spikesWidthMultiplier = 50;
     }
   }
-  
-    if (key == 'c') {
+
+  if (key == 'c') {
     enableColorDimer = !enableColorDimer;
+  }
+  if (key == 'x') {
+    enableSpikesLength = !enableSpikesLength;
+  }
+
+  if (key == 'w') {
+    int randomBicho = floor(random(bichos.size()));
+    bichos.get(randomBicho).swimMultiplier = 5;
+    bichos.get(randomBicho).radiusMaxMultiplier = random(8, 15);
+  }
+
+  if (key == 'p') {
+    int randomColor = floor(random(colorPairs.length * 2));
+    color selected = colorPairs[floor(randomColor * 0.5)][randomColor % 2];
+    seaFlow.setColorPair(seaFlow.colorPair[1], selected);
   }
 }
 
