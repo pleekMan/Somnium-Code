@@ -53,8 +53,8 @@ void setup() {
 
   enableCameraControl = true;
 
-  vertShader = loadShader("frags.glsl", "verts.glsl");
-  shader(vertShader);
+  //vertShader = loadShader("frags.glsl", "verts.glsl");
+  //shader(vertShader);
 }
 
 void draw() {
@@ -74,7 +74,6 @@ void draw() {
 
 
 
-  //drawGround();
 
   // CAM TRAJECTORY
   //stroke(255, 255, 0);
@@ -89,6 +88,7 @@ void draw() {
   perspective(camFov, width/(float)height, camZ * 0.1, camZ * 10);
   camera(cam.camPosition.x, cam.camPosition.y, cam.camPosition.z, cam.target.x, cam.target.y, cam.target.z, 0, 1, 0);
 
+  //drawGround();
 
 
   drawAxisGizmo(100);
@@ -173,13 +173,14 @@ void createNewCrater() {
 void drawGround() {
 
   stroke(255);
+  beginShape();
   fill(255, 255, 0);
-  beginShape(QUAD);
   vertex(-1000, 0, 0);
   vertex(1000, 0, 0);
+  fill(255, 0, 255);
   vertex(1000, 0, -2000);
   vertex(-1000, 0, -2000);
-  endShape();
+  endShape(CLOSE);
 }
 
 

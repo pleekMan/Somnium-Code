@@ -2,8 +2,8 @@ import peasy.*;
 
 PeasyCam cam;
 
-float seaSize = 1000;
-float creatureCount = 50;
+float seaSize = 3000;
+float creatureCount = 150;
 Creature bicho;
 
 FlowCloud seaFlow;
