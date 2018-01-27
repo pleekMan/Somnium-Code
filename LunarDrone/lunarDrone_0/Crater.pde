@@ -167,6 +167,7 @@ class Crater {
     //fill(0, 127, 255);
 
     float angleUnit = TWO_PI / revolveResolution;
+    float tinyHeightOffset = random(1); // TO AVOID Z-FIGHT ON OVERLAPPING CRATERS;
 
 
     for (int r=0; r < revolveResolution; r++) {
@@ -189,8 +190,8 @@ class Crater {
 
         x = center.x + (x * widthMultiplier);
         z = center.z + (z * widthMultiplier);
-        y = center.y + (y * -heightMultiplier);
-        y2 = center.y + (y2 * -heightMultiplier);
+        y = center.y + (y * -heightMultiplier) - tinyHeightOffset; 
+        y2 = center.y + (y2 * -heightMultiplier) - tinyHeightOffset; 
 
 
         x2 = center.x + (x2 * widthMultiplier);
@@ -203,7 +204,7 @@ class Crater {
         //float x = craterVertices[i].x * widthMultiplier;
         //float y =  craterVertices[i].y * -heightMultiplier;
 
-        crater.fill(255 - ((i/(float)craterVertices.length) * 255));
+        crater.fill(((i/(float)craterVertices.length) * 255));
         //crater.fill(i * 10);
 
         crater.vertex(x, y, z);

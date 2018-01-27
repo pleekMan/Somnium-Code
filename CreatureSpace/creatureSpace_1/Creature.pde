@@ -16,7 +16,7 @@ class Creature {
   int bodyResAlong = 20;
   float radiusMax = 50;
   float radiusMin = 10;
-  float tall = 300;
+  float tall = random(500,1000);
 
   // INTERACTIVITY & TRIGGERS  
   float radiusMaxMultiplier = 1;
@@ -24,7 +24,8 @@ class Creature {
   float spikesWidthMultiplier = 1;
   float opacityMultiplier = 1;
   float swimMultiplier = 1;
-
+  
+  
 
   float radiusOsc = random(100);
   float radiusOscIncrement = random(0.1);
@@ -189,7 +190,7 @@ class Creature {
     side2.normalize();
 
     PVector normalVector = side1.cross(side2);
-    normalVector.mult(50 * spikesLengthMultiplier);
+    normalVector.mult(20 * spikesLengthMultiplier);
 
     strokeWeight(spikesWidthMultiplier);
     line(x1, y1, z1, normalVector.x + x1, normalVector.y + y1, normalVector.z + z1);

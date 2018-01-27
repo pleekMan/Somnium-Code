@@ -31,7 +31,7 @@ class FlowCloud {
     //noStroke();
     
     pushMatrix();
-    translate(size.x * -0.5, size.y * -0.5, size.z * -0.5);
+    translate(size.x * -0.5, -size.y, size.z * -0.5);
     
     //beginShape(TRIANGLES);
     for (int i=0; i<particlesPosition.length; i++) {

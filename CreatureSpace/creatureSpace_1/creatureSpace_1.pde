@@ -2,11 +2,12 @@ import peasy.*;
 
 PeasyCam cam;
 
-float seaSize = 3000;
-float creatureCount = 150;
+float seaSize = 1000;
+float creatureCount = 20;
 Creature bicho;
 
 FlowCloud seaFlow;
+Surface moonSurface;
 
 ArrayList<Creature> bichos;
 
@@ -19,13 +20,14 @@ boolean enableSpikesLength = false;
 void setup() {
   size(800, 800, P3D);
   frameRate(30);
-  cam = new PeasyCam(this, 500);
+  cam = new PeasyCam(this, 3000);
   cam.setMinimumDistance(20);
   cam.setMaximumDistance(5000);
 
   generateColorPairs();
 
   // EL BICHO CENTRAL, EL PRIMERO
+
   bicho = new Creature();
   bicho.setPosition(new PVector());
   bicho.setOscillation(random(100), random(0.1));
@@ -35,25 +37,27 @@ void setup() {
   bicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
   println("-|| Color Pair: " + randomColorPair);
 
+
   bichos = new ArrayList<Creature>();
 
   for (int i=0; i<creatureCount; i++) {
-    PVector spawnPosition = new PVector(random(-seaSize, seaSize), random(-seaSize, seaSize), random(-seaSize, seaSize));
+    PVector spawnPosition = new PVector(random(-seaSize, seaSize), random(-seaSize * 0.1, seaSize * 0.1), random(-seaSize, seaSize));
 
     Creature newBicho = new Creature();
     newBicho.setPosition(spawnPosition);
     newBicho.setOscillation(random(100), random(0.1));
-    newBicho.setSize(random(10, 20), random(21, 100));
-    newBicho.setSkinType(floor(random(2.99)));
+    newBicho.setSize(random(5, 10), random(11, 30));
+    newBicho.setSkinType(0);
     randomColorPair = floor(random(colorPairs.length));
     newBicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
-    println("-|| Color Pair: " + randomColorPair);
 
     bichos.add(newBicho);
   }
 
   seaFlow = new FlowCloud(new PVector(seaSize, seaSize, seaSize));
   seaFlow.setColorPair(colorPairs[0][0], colorPairs[0][1]);
+
+  moonSurface = new Surface(seaSize);
 }
 
 void draw() {
@@ -82,16 +86,21 @@ void draw() {
 
   drawAxisGizmo(0, 0, 0, 100);
 
+  moonSurface.render();
+
   bicho.render();
-
+  
+  pushMatrix();
+  translate(0,0,-seaSize);
   for (int i=0; i<bichos.size (); i++) {
-
-    //bichos.get(i).spikesWidthMultiplier = map(mouseY, height, 0, 1,30);
-
     bichos.get(i).render();
   }
+  popMatrix();
 
   seaFlow.render();
+
+  //drawGroundPlane();
+  //drawSceneBoundingBox();
 }
 
 public void generateColorPairs() {
@@ -107,6 +116,24 @@ public void generateColorPairs() {
   colorPairs[3][1] = color(120, 255, 167);
 }
 
+void drawGroundPlane() {
+  // GROUND PLANE
+
+  pushMatrix();
+  translate(0, seaSize*0.6, 0);
+  rotateX(HALF_PI);
+  rectMode(CENTER);
+  fill(0);
+  rect(0, 0, seaSize * 10, seaSize * 10);
+  popMatrix();
+}
+
+void drawSceneBoundingBox() {
+  // SCENE BOUNDING BOX
+  noFill();
+  stroke(50);
+  box(seaSize * 2);
+}
 
 public void drawAxisGizmo(PVector position, float size) {
   drawAxisGizmo(position.x, position.y, position.z, size);

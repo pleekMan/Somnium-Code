@@ -17,7 +17,7 @@ boolean enableCameraControl;
 
 PShader vertShader;
 
-float invertedAlpha = 0;
+float lightDarkControl = 0;
 
 void setup() {
   size(1500, 750, P3D);
@@ -58,7 +58,7 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(255 - (255 * lightDarkControl));
 
   //if (frameCount % 15 == 0)frame.setTitle("FPS: " + frameRate);
 
@@ -73,19 +73,21 @@ void draw() {
    */
 
 
-
-
   // CAM TRAJECTORY
   //stroke(255, 255, 0);
   //line(0, -1, 0, 0, -1, -10000);
 
-
+  lightDarkControl = norm(mouseX,0,width);
 
   cam.update();
   cam.render();
-  float camFov = map(mouseX, 0, width, 0.1, TWO_PI);
-  float camZ = (height/2.0) / tan(camFov/2.0);
-  perspective(camFov, width/(float)height, camZ * 0.1, camZ * 10);
+  
+  //FOV control
+  //float camFov = map(mouseX, 0, width, 0.1, TWO_PI);
+  //float camZ = (height/2.0) / tan(camFov/2.0);
+  //perspective(camFov, width/(float)height, camZ * 0.1, camZ * 10);
+  
+  // CAM
   camera(cam.camPosition.x, cam.camPosition.y, cam.camPosition.z, cam.target.x, cam.target.y, cam.target.z, 0, 1, 0);
 
   //drawGround();
@@ -118,7 +120,6 @@ void draw() {
 
 
 
-  invertedAlpha += 0.01;
 
 
   showFPS();
@@ -130,6 +131,12 @@ void keyPressed() {
   if (key == ' ') {
     enableCameraControl = !enableCameraControl;
     //camera.setActive(enableCameraControl);
+  }
+  
+  if(key == 'c'){
+   int randomCrater = floor(random(craters.size()));
+  //craters.get(randomCrater)..gsetFill(color(255));
+ cratersFrozen.getChild(randomCrater).setFill(color(255,0,0)); 
   }
 }
 
