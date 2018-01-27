@@ -22,13 +22,13 @@ class Surface { //<>//
   float acrossLength = 3000;
   float forwardLength = 3000;
 
-  float heightMultiplier = -800;
+  float heightMultiplier = -1000;
   float lineLength;
 
   Surface(float sceneSize) {
 
-    forwardLength = sceneSize * 4;
-    acrossLength = sceneSize * 4;
+    forwardLength = sceneSize * 6;
+    acrossLength = sceneSize * 6;
     /*
     radius = rad;
      float centerY = 0 + radius + (radius * 0.1);
@@ -40,19 +40,23 @@ class Surface { //<>//
      */
 
     acrossNoiseStart = random(10);
-    acrossNoiseEnd = acrossNoiseStart + 3;
+    acrossNoiseEnd = acrossNoiseStart + 4;
     forwardNoiseStart = random(10);
-    forwardNoiseEnd = forwardNoiseStart + 0.5;
+    forwardNoiseEnd = forwardNoiseStart + 0.3;
     forwardNoiseIncrement = -0.02;
 
     lineLength = (forwardLength / forwardRes);
   }
 
   void render() {
-
-    stroke(255);
-    noFill();
-
+     
+    //heightMultiplier = map(mouseY,height,0,0,-2000);
+    
+    //stroke(255);
+    //noFill();
+    //fill(255);
+    noStroke();
+    
     pushMatrix();
     translate(-(acrossLength * 0.5), -heightMultiplier, -(forwardLength * 0.5));
 
@@ -65,7 +69,7 @@ class Surface { //<>//
       //println(i + " Norm: " + zNormNext);
       //println(i + " pos: " + zPosNext);
 
-      beginShape(LINES);
+      beginShape(TRIANGLE_STRIP);
       for (int j=0; j < acrossRes; j++) {
         float xNorm = (j / (float)acrossRes);
         float xPos = (j / (float)acrossRes) * acrossLength;
@@ -76,10 +80,15 @@ class Surface { //<>//
 
         float yInNoiseNext = map(zNormNext, 0, 1, forwardNoise, forwardNoiseEnd);
         float yPosNext = noise(xInNoise, yInNoiseNext) * heightMultiplier;
+        
+        // CURVATURE BEND
+        float bendStrength = abs(map(xNorm,0,1,-1,1)) * -1500;
+        
+        
+        fill(255 - (zNorm * 255));
 
-
-        vertex(xPos, yPos, zPos);
-        vertex(xPos, yPosNext, zPosNext);
+        vertex(xPos, yPos + bendStrength, zPos);
+        vertex(xPos, yPosNext + bendStrength, zPosNext);
       }
       endShape();
     }

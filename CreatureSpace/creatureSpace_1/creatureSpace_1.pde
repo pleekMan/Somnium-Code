@@ -35,7 +35,7 @@ void setup() {
   bicho.setSkinType(floor(random(2.99)));
   int randomColorPair = floor(random(colorPairs.length));
   bicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
-  println("-|| Color Pair: " + randomColorPair);
+  //println("-|| Color Pair: " + randomColorPair);
 
 
   bichos = new ArrayList<Creature>();
@@ -46,7 +46,7 @@ void setup() {
     Creature newBicho = new Creature();
     newBicho.setPosition(spawnPosition);
     newBicho.setOscillation(random(100), random(0.1));
-    newBicho.setSize(random(5, 10), random(11, 30));
+    newBicho.setSize(random(10, 20), random(21, 100));
     newBicho.setSkinType(0);
     randomColorPair = floor(random(colorPairs.length));
     newBicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
@@ -65,12 +65,13 @@ void draw() {
 
   /*
   cam.beginHUD();
-   fill(255, 255, 0);
-   drawMouseCoordinates();  
-   fill(0,3);
-   rect(0,0,width, height);
-   cam.endHUD();
-   */
+  fill(255, 255, 0);
+  drawMouseCoordinates();  
+  fill(0, 3);
+  rect(0, 0, width, height);
+  println(frameRate);
+  cam.endHUD();
+  */
 
   // INTERACTIVITY AND TRIGGERS. Also at keyPressed
   if (enableColorDimer) {
@@ -89,9 +90,9 @@ void draw() {
   moonSurface.render();
 
   bicho.render();
-  
+
   pushMatrix();
-  translate(0,0,-seaSize);
+  translate(0, 0, -seaSize);
   for (int i=0; i<bichos.size (); i++) {
     bichos.get(i).render();
   }

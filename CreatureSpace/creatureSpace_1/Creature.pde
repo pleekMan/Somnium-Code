@@ -13,7 +13,7 @@ class Creature {
   //PVector size;
 
   int bodyResRadial = 10;
-  int bodyResAlong = 20;
+  int bodyResAlong = 40;
   float radiusMax = 50;
   float radiusMin = 10;
   float tall = random(500,1000);
