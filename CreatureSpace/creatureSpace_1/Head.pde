@@ -13,6 +13,8 @@ class Head {
   Antennae antennae;
   int antennaeCount;
 
+  float alphaMultiplier = 0;
+
   public Head() {
 
     pos = new PVector();
@@ -62,7 +64,7 @@ class Head {
       float vertexUnit = TWO_PI / faceVertices;
 
       //fill(255 * (s / (float)faceSkins * 2),0,0);
-      stroke(255 * (s / (float)faceSkins * 2), 0, 0);
+      stroke((255 * (s / (float)faceSkins * 2)) * alphaMultiplier, 0, 0);
 
       beginShape();
       for (int v=0; v<faceVertices; v++) {
@@ -88,9 +90,9 @@ class Head {
 
     float rotationUnit = TWO_PI / (float)antennaeCount;
     pushMatrix();
-    scale(1,1,0.3);
+    scale(1, 1, 0.3);
     rotateZ(faceRotation);
-    
+
     for (int i=0; i<antennaeCount; i++) {
 
       pushMatrix();
@@ -145,5 +147,10 @@ class Head {
 
   void setFaceSize(float _s) {
     faceSize = _s * 0.5;
+  }
+
+  void setOpacity(float value) {
+    alphaMultiplier = value;
+    antennae.setOpacity(alphaMultiplier);
   }
 }

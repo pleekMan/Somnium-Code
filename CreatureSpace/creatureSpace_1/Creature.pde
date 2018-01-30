@@ -16,16 +16,16 @@ class Creature {
   int bodyResAlong = 40;
   float radiusMax = 50;
   float radiusMin = 10;
-  float tall = random(500,1000);
+  float tall = random(500, 1000);
 
   // INTERACTIVITY & TRIGGERS  
   float radiusMaxMultiplier = 1;
-  float spikesLengthMultiplier = 1;
+  float spikesLengthMultiplier = 0.1;
   float spikesWidthMultiplier = 1;
-  float opacityMultiplier = 1;
+  float opacityMultiplier = 0;
   float swimMultiplier = 1;
-  
-  
+  boolean starting = false;
+
 
   float radiusOsc = random(100);
   float radiusOscIncrement = random(0.1);
@@ -47,7 +47,18 @@ class Creature {
 
     head = new Head();
     head.setFaceSize(radiusMax);
-  } 
+  }
+
+  public void update() {
+    if (starting) {
+      opacityMultiplier += 0.01;
+      if (opacityMultiplier >= 1) {
+        starting = false;
+        opacityMultiplier = 1;
+      }
+      head.setOpacity(opacityMultiplier);
+    }
+  }
 
   public void render() {
     pushStyle();
@@ -128,11 +139,10 @@ class Creature {
 
         noStroke();
         fill(c, (((ringOscillation + 1) * 0.5) * 255) * opacityMultiplier);
-
         drawSkin(skinType, x, y, x1, y1, x2, y2, x3, y3, zPos, zPosNext);
 
 
-        stroke((ringOscillation + 1)  * 255);
+        stroke(((ringOscillation + 1)  * 255) * opacityMultiplier);
         drawSpikes(x, y, zPos, x1, y1, zPos, x2, y2, zPosNext);
       }
 
@@ -144,7 +154,7 @@ class Creature {
     radiusOsc += radiusOscIncrement;
     waveOscX += waveIncrement;
     waveOscY += waveIncrement;
-    
+
     popStyle();
   }
 
@@ -204,5 +214,9 @@ class Creature {
   public void setColors(color c1, color c2) {
     color1 = c1;
     color2 = c2;
+  }
+
+  public void trigger() {
+    starting = true;
   }
 }

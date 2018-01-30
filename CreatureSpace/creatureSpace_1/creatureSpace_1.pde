@@ -10,6 +10,7 @@ FlowCloud seaFlow;
 Surface moonSurface;
 
 ArrayList<Creature> bichos;
+int bichosStartCounter = 0;
 
 color colorPairs[][];
 
@@ -54,6 +55,8 @@ void setup() {
     bichos.add(newBicho);
   }
 
+  setPrimaryBicho();
+
   seaFlow = new FlowCloud(new PVector(seaSize, seaSize, seaSize));
   seaFlow.setColorPair(colorPairs[0][0], colorPairs[0][1]);
 
@@ -65,13 +68,13 @@ void draw() {
 
   /*
   cam.beginHUD();
-  fill(255, 255, 0);
-  drawMouseCoordinates();  
-  fill(0, 3);
-  rect(0, 0, width, height);
-  println(frameRate);
-  cam.endHUD();
-  */
+   fill(255, 255, 0);
+   drawMouseCoordinates();  
+   fill(0, 3);
+   rect(0, 0, width, height);
+   println(frameRate);
+   cam.endHUD();
+   */
 
   // INTERACTIVITY AND TRIGGERS. Also at keyPressed
   if (enableColorDimer) {
@@ -85,20 +88,24 @@ void draw() {
     }
   }
 
-  drawAxisGizmo(0, 0, 0, 100);
+  //drawAxisGizmo(0, 0, 0, 100);
 
+  tint(map(mouseY, height, 0, 0, 255));
   moonSurface.render();
+  seaFlow.render();
+
+  tint(255);
 
   bicho.render();
 
   pushMatrix();
   translate(0, 0, -seaSize);
   for (int i=0; i<bichos.size (); i++) {
+    bichos.get(i).update();
     bichos.get(i).render();
   }
   popMatrix();
 
-  seaFlow.render();
 
   //drawGroundPlane();
   //drawSceneBoundingBox();
@@ -115,6 +122,19 @@ public void generateColorPairs() {
   colorPairs[2][1] = color(255, 0, 160);
   colorPairs[3][0] = color(235, 0, 200);
   colorPairs[3][1] = color(120, 255, 167);
+}
+
+public void setPrimaryBicho() {
+
+
+  Creature firstBicho = bichos.get(0);
+  firstBicho.setPosition(new PVector());
+  firstBicho.setOscillation(random(10), 0.05);
+  firstBicho.setSize(15, 80);
+  firstBicho.setSkinType(0);
+  int randomColorPair = floor(random(colorPairs.length));
+  firstBicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
+  firstBicho.trigger();
 }
 
 void drawGroundPlane() {
@@ -205,6 +225,15 @@ void keyPressed() {
     int randomColor = floor(random(colorPairs.length * 2));
     color selected = colorPairs[floor(randomColor * 0.5)][randomColor % 2];
     seaFlow.setColorPair(seaFlow.colorPair[1], selected);
+  }
+
+  if (key == ' ') {
+    bichos.get(bichosStartCounter % bichos.size()).trigger();
+    bichosStartCounter++;
+  }
+
+  if (key == '3') {
+    moonSurface.trigger();
   }
 }
 

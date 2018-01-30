@@ -4,6 +4,7 @@ class Antennae {
 
   float motion = 39;
   float motionIncrement = random(0.001, 0.01);
+  float alphaMultiplier = 0;
 
   public Antennae() {
 
@@ -26,11 +27,15 @@ class Antennae {
 
     beginShape();
     for (int i=1; i<nodes.length; i++) {
-      stroke(300 - (255 * (i / (float)nodes.length)));
+      stroke(300 - (255 * (i / (float)nodes.length)), alphaMultiplier * 255);
       vertex(nodes[i].x + random(-10, 10), nodes[i].y  + random(-10, 10), nodes[i].z);
     }
     endShape();
 
     motion+=motionIncrement;
+  }
+  
+  public void setOpacity(float value){
+    alphaMultiplier = value;
   }
 }

@@ -25,6 +25,9 @@ class Surface { //<>//
   float heightMultiplier = -1000;
   float lineLength;
 
+  float alphaMultiplier;
+  boolean starting = false;
+
   Surface(float sceneSize) {
 
     forwardLength = sceneSize * 6;
@@ -49,14 +52,21 @@ class Surface { //<>//
   }
 
   void render() {
-     
+
+    if (starting) {
+      alphaMultiplier += 0.01;
+      if (alphaMultiplier >= 1) {
+        starting = false;
+        alphaMultiplier = 1;
+      }
+    }
     //heightMultiplier = map(mouseY,height,0,0,-2000);
-    
+
     //stroke(255);
     //noFill();
     //fill(255);
     noStroke();
-    
+
     pushMatrix();
     translate(-(acrossLength * 0.5), -heightMultiplier, -(forwardLength * 0.5));
 
@@ -80,12 +90,12 @@ class Surface { //<>//
 
         float yInNoiseNext = map(zNormNext, 0, 1, forwardNoise, forwardNoiseEnd);
         float yPosNext = noise(xInNoise, yInNoiseNext) * heightMultiplier;
-        
+
         // CURVATURE BEND
-        float bendStrength = abs(map(xNorm,0,1,-1,1)) * -1500;
-        
-        
-        fill(255 - (zNorm * 255));
+        float bendStrength = abs(map(xNorm, 0, 1, -1, 1)) * -1500;
+
+
+        fill((255 - (zNorm * 255)) * alphaMultiplier);
 
         vertex(xPos, yPos + bendStrength, zPos);
         vertex(xPos, yPosNext + bendStrength, zPosNext);
@@ -120,5 +130,9 @@ class Surface { //<>//
      rotation+=rotationIncrement;
      
      */
+  }
+
+  public void trigger() {
+    starting = true;
   }
 }
