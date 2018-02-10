@@ -15,10 +15,11 @@ void setup() {
 
 
 void draw() {
-
+  background(0);
 
 
   layer.beginDraw();
+  layer.background(0);
   for (int i=0; i < 256; i++) {
     layer.stroke(i); 
     layer.line(i, 0, i, 24);
@@ -38,18 +39,18 @@ void draw() {
 
   inverter.set("resolution", float(width), float(height));
   inverter.set("multiplier", mouseX/(float)width);
-  
-  image(layer,0,0);
-  
-  if(useShader)shader(inverter);
-  
+
+  //image(layer,0,0);
+
+  if (useShader)shader(inverter);
+
   image(layer, 0, 0);
-  
+
   resetShader();
 }
 
-void keyPressed(){
- if(key == 's'){
-  useShader = !useShader; 
- }
+void keyPressed() {
+  if (key == 's') {
+    useShader = !useShader;
+  }
 }

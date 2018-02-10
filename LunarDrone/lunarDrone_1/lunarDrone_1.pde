@@ -15,38 +15,27 @@ ArrayList<Crater> craters;
 PShape cratersFrozen;
 boolean enableCameraControl;
 
-PShader vertShader;
+PGraphics canvasLunar;
+PShader shader;
 
 float lightDarkControl = 0;
-boolean enableCamFOV = false;
 
 void setup() {
   size(1500, 750, P3D);
   noStroke();
   fill(255, 255, 0);
   strokeWeight(1);
+  textureMode(NORMAL);
 
-  /*
-  camera = new Camera(this, 0, -50, 0);
-   camera.jump(0, -50, 100);
-   camera.aim(0, -50, -1000);
-   */
-  //camera.zoom(HALF_PI);
+  canvasLunar = createGraphics(width, height, P3D);
+  shader = loadShader("invert.glsl");
 
   cameraVel = new PVector(0, 0, -0.3);
 
-
-  //  camera = new PeasyCam(this, 500);
-  //  camera.setMinimumDistance(25);
-  //  camera.setMaximumDistance(2000);
-  //  camera.setSuppressRollRotationMode();
-  //  //camera.lookAt(0, -100, -2000, 100000);
-
   cam = new LunarCamera();
 
-
   craters = new ArrayList<Crater>();
-  cratersFrozen = createShape(GROUP);
+  cratersFrozen = canvasLunar.createShape(GROUP);
 
   for (int i=0; i<100; i++) {
     createNewCrater();
@@ -60,8 +49,8 @@ void setup() {
 
 void draw() {
   //background(255 - (255 * lightDarkControl));
-  background(255);
-  
+   background(0);
+   
   //if (frameCount % 15 == 0)frame.setTitle("FPS: " + frameRate);
 
   //lights();
@@ -79,28 +68,35 @@ void draw() {
   //stroke(255, 255, 0);
   //line(0, -1, 0, 0, -1, -10000);
 
-  //lightDarkControl = norm(mouseX, 0, width);
+  lightDarkControl = norm(mouseX, 0, width);
 
   cam.update();
   //cam.render();
 
   //FOV control
-  if (enableCamFOV) {
-    float camFov = map(mouseX, 0, width, 0.1, TWO_PI);
-    float camZ = (height/2.0) / tan(camFov/2.0);
-    perspective(camFov, width/(float)height, camZ * 0.1, camZ * 10);
-  }
-  
-  
+  //float camFov = map(mouseX, 0, width, 0.1, TWO_PI);
+  //float camZ = (height/2.0) / tan(camFov/2.0);
+  //perspective(camFov, width/(float)height, camZ * 0.1, camZ * 10);
+
   // CAM
-  camera(cam.camPosition.x, cam.camPosition.y, cam.camPosition.z, cam.target.x, cam.target.y, cam.target.z, 0, 1, 0);
+  canvasLunar.camera(cam.camPosition.x, cam.camPosition.y, cam.camPosition.z, cam.target.x, cam.target.y, cam.target.z, 0, 1, 0);
 
   //drawGround();
 
 
   //drawAxisGizmo(100);
 
-  shape(cratersFrozen);
+
+
+
+
+  canvasLunar.beginDraw();
+  //canvasLunar.background(255 - (255 * lightDarkControl));
+  canvasLunar.background(0);
+  canvasLunar.shape(cratersFrozen);
+  canvasLunar.filter(shader);
+  canvasLunar.endDraw();
+
 
 
   // DO STUFF ON EACH CRATER
@@ -121,13 +117,18 @@ void draw() {
    }
    */
 
+  shader.set("resolution", float(width), float(height));
+  shader.set("multiplier", mouseX/(float)width);
+  
+  shader(shader);
 
+  image(canvasLunar, 0, 0);
+  
+  resetShader();
 
-
-
-
-
-  //showFPS();
+  //hint(DISABLE_DEPTH_TEST);
+  showFPS();
+  //hint(ENABLE_DEPTH_TEST);
 
   //camera.feed();
 }
@@ -142,10 +143,6 @@ void keyPressed() {
     int randomCrater = floor(random(craters.size()));
     //craters.get(randomCrater)..gsetFill(color(255));
     cratersFrozen.getChild(randomCrater).setFill(color(255, 0, 0));
-  }
-  
-  if(key == 'f'){
-   enableCamFOV = !enableCamFOV; 
   }
 }
 

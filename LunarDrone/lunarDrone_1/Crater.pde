@@ -12,6 +12,7 @@ class Crater {
   float underGroundLevel;
 
   int revolveResolution;
+  
 
   Crater() {
 

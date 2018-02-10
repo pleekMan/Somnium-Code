@@ -34,13 +34,11 @@ class LunarCamera {
 
 
     //TARGET
-
     pushMatrix();
     translate(target.x, target.y, target.z);
     box(20);
     popMatrix();
-    
-    
+
     //CAMERA
     pushMatrix();
     translate(camPosition.x, camPosition.y, camPosition.z);

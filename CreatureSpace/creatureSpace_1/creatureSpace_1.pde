@@ -135,6 +135,7 @@ public void setPrimaryBicho() {
   int randomColorPair = floor(random(colorPairs.length));
   firstBicho.setColors(colorPairs[randomColorPair][0], colorPairs[randomColorPair][1]);
   firstBicho.trigger();
+  firstBicho.opacityMultiplier = 0;
 }
 
 void drawGroundPlane() {
@@ -237,7 +238,7 @@ void keyPressed() {
   }
 }
 
-void mousePressed() {
+void mousePressed() {    
 }
 
 void mouseReleased() {
