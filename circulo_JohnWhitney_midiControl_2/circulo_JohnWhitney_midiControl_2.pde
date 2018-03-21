@@ -8,6 +8,7 @@ int circlesCount = 4;
 float[][] vertXPos;
 float[][] vertYPos;
 float[][] oscTiempo;
+color[] colors;
 float oscIncrementoGlobal;
 
 int cantidadDeVertices = floor(TWO_PI * 3) * 100; // TO COINCIDE WITH COLOR %s
@@ -34,11 +35,12 @@ MidiBus midiControl;
 
 void setup() {
   size(600, 600);
-  background(45);
-  
+  background(0);
 
-  centroX = new float[4];
-  centroY = new float[4];
+
+  centroX = new float[circlesCount];
+  centroY = new float[circlesCount];
+  colors = new color[circlesCount];
 
   vertXPos = new float[circlesCount][cantidadDeVertices];
   vertYPos = new float[circlesCount][cantidadDeVertices];
@@ -54,6 +56,11 @@ void setup() {
       oscTiempo[j][i] = (TWO_PI / cantidadDeVertices) * i; // GETS WRITTEN OVER BY controlIncrOsc FUNCTION
     }
   }
+
+  colors[0] = color(25, 110, 0); // EARTH GREEN BROWN
+  colors[1] = color(0, 25, 128); // WATER BLUE
+  colors[2] = color(128, 25, 0); // FIRE RED ORANGE YELLOW
+  colors[3] = color(128, 128, 0); // AIR YELLOW
 
   radioInterno = 0;
   brillo = 255;
@@ -71,7 +78,7 @@ void draw() {
 
   noStroke();
   fill(255);
-  
+
   //displaceRotation();
   calcularPosiciones();
   //dibujarCirculo();
@@ -90,6 +97,8 @@ void calcularPosiciones() {
     centroX[j] = (width * 0.5) + (radio4Circulos * cos(currentRotation));
     centroY[j] = (height * 0.5) + (radio4Circulos * sin(currentRotation));
 
+    //toTint(j);
+
     for (int i=0; i <  cantidadDeVertices; i++) {
 
       float anguloTrig = calcularConFuncion(funcionTrigUsada, j, i);
@@ -102,11 +111,11 @@ void calcularPosiciones() {
       vertYPos[j][i] = centroY[j] + (rangoPantalla * sin(angulo));
 
       // DRAW POINTS
-      //line(vertXPos[i],vertYPos[i], vertXPos[(i+1) % cantidadDeVertices], vertYPos[(i+1) % cantidadDeVertices]);
-      //line(vertXPos[i], vertYPos[i], centroX, centroY);
-      fill(abs(sin(i * 0.01)) * 255, 0, abs(sin(i * 0.02)) * 255, 200);
+      float r = abs(sin(i * 0.01)) * 255;
+      float g = 0;//abs(cos(i * 0.03)) * (j*50);
+      float b = abs(sin(i * 0.02)) * 255;
+      fill(r, g, b);
       ellipse(vertXPos[j][i], vertYPos[j][i], pointSize, pointSize);
-      //point(vertXPos[j][i], vertYPos[j][i]);
 
       oscTiempo[j][i] += (anguloVel * (i/(float) cantidadDeVertices));
 
@@ -117,10 +126,22 @@ void calcularPosiciones() {
 
     //text(j, centroX[j], centroY[j]);
   }
-  
+
   //fill(255);
   //text(oscTiempo[0][0],10,10);
   rotacion4Circulos += rotacion4CirculosIncr;
+}
+
+void toTint(int circle) {
+  if (circle == 1) {
+    tint(200, 50, 0);
+  } else if (circle == 2) {
+    tint(0, 200, 50);
+  } else if (circle == 3) {
+    tint(0, 50, 200);
+  } else {
+    tint(255);
+  }
 }
 
 void dibujarCirculo() {
@@ -187,7 +208,7 @@ void displaceRotation() {
 }
 
 
-void mouseDragged(){
+void mouseDragged() {
   displaceRotation();
 }
 
